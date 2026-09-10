@@ -1,10 +1,34 @@
 name: Starscape Android Runtime
+
 on:
   push:
     branches: ["starscape/android-port-v1"]
+    paths:
+      - "starscape/**"
+      - ".github/workflows/starscape-android-build.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - run: echo Starscape Android build
+      - name: Checkout build branch
+        uses: actions/checkout@v4
+
+      - name: Build Starscape runtime APK
+        shell: bash
+        run: bash starscape/build-runtime.sh
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Starscape-Android-Runtime-v1
+          path: |
+            Starscape-Android-Runtime-v1.apk
+            Starscape-Android-Runtime-v1.apk.sha256
+          if-no-files-found: error
+          retention-days: 7
