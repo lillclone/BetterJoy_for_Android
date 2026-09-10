@@ -1,0 +1,10 @@
+name: Starscape Android Runtime
+on:
+  push:
+    branches: ["starscape/android-port-v1"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo Starscape Android build
