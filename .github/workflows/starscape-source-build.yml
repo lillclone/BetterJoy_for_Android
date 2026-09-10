@@ -1,0 +1,41 @@
+name: Starscape Android Bootstrap
+
+on:
+  push:
+    branches: ["starscape/android-port-v1"]
+    paths:
+      - "starscape/StarscapeActivity.java"
+      - "starscape/controls-starscape.icp"
+      - "starscape/build-source-apk.sh"
+      - ".github/workflows/starscape-source-build.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Build Starscape bootstrap APK
+        shell: bash
+        run: bash starscape/build-source-apk.sh
+
+      - name: Upload bootstrap APK and local signing tools
+        uses: actions/upload-artifact@v4
+        with:
+          name: Starscape-Android-Bootstrap-v2
+          path: |
+            Starscape-Android-Bootstrap-v2.apk
+            Starscape-Android-Bootstrap-v2.apk.sha256
+            signing-tools/
+          if-no-files-found: error
+          retention-days: 7
