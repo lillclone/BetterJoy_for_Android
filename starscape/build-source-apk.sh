@@ -86,8 +86,11 @@ unzip -l Starscape-Android-Bootstrap-v2.apk | grep 'assets/inputcontrols/profile
 unzip -l Starscape-Android-Bootstrap-v2.apk | grep 'classes.dex'
 sha256sum Starscape-Android-Bootstrap-v2.apk > Starscape-Android-Bootstrap-v2.apk.sha256
 
-mkdir -p signing-tools/lib
+mkdir -p signing-tools/lib signing-tools/lib64
 cp "$BUILD_TOOLS/zipalign" signing-tools/
 cp "$BUILD_TOOLS/apksigner" signing-tools/
 cp "$BUILD_TOOLS/lib/apksigner.jar" signing-tools/lib/
+LIBCXX="$(find "$BUILD_TOOLS" -name 'libc++.so' -type f | head -1)"
+test -n "$LIBCXX"
+cp "$LIBCXX" signing-tools/lib64/
 chmod +x signing-tools/zipalign signing-tools/apksigner
